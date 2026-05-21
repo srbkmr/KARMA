@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karma — Student Financial Empowerment</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="logo-container" onclick="app.switchView('feed')">
+          <div class="logo-icon">
+            <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" style="width: 24px; height: 24px;">
+              <path d="M8 3a1 1 90 111 1H3a1 1 90 100 2h6a1 1 90 110 2H3a1 1 90 101 1V3a1 1 90 112 0v6a1 1 90 102 0Z" transform="scale(1.333 1) translate(-1.5) rotate(-45 6 6)"/>
+            </svg>
+          </div>
+          <span class="logo-text">Karma</span>
+        </div>
+        
+        <ul class="sidebar-menu">
+          <li class="menu-item active" id="nav-feed">
+            <button onclick="app.switchView('feed')">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+              </svg>
+              Task Marketplace
+            </button>
+          </li>
+          
+          <li class="menu-item" id="nav-post">
+            <button onclick="app.switchView('post')">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Post a Task
+            </button>
+          </li>
+          
+          <li class="menu-item" id="nav-hub">
+            <button onclick="app.switchView('hub')">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              My Hub (Dashboard)
+            </button>
+          </li>
+          
+          <li class="menu-item" id="nav-council">
+            <button onclick="app.switchView('council')">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+              Leaderboard
+            </button>
+          </li>
+          
+          <li class="menu-item" id="nav-account">
+            <button onclick="app.switchView('account')">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+              Create Account
+            </button>
+          </li>
+        </ul>
+      </div>
+      
+      <!-- Side profile widget containing pivoted dual values -->
+      <div class="user-profile-widget">
+        <div class="user-info">
+          <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Elena" alt="My avatar" class="user-avatar" id="widget-avatar">
+          <div class="user-details">
+            <span class="user-name" id="widget-username">Elena Rostova</span>
+            <span class="user-rank" id="widget-rank" style="color: var(--primary);">Student Provider</span>
+          </div>
+        </div>
+        
+        <div class="user-stats-bar">
+          <div class="stat-item">
+            <span class="stat-label">Cash Wallet</span>
+            <span class="stat-val" id="widget-cash" style="color: var(--cash-green); font-size: 14px;">₹120.00</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Trust Score</span>
+            <span class="stat-val" id="widget-karma" style="color: var(--escrow-gold); font-size: 14px;">250 KP</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- MAIN VIEWPORT CONTENT -->
+    <main class="main-viewport">
+      
+      <!-- Role Switch Toggle -->
+      <div class="top-header-bar">
+        <div class="role-switch-container">
+          <button class="role-btn active student" id="role-btn-student" onclick="app.setRole('Student')">
+            Student Mode (Earn Cash)
+          </button>
+          <button class="role-btn seeker" id="role-btn-seeker" onclick="app.setRole('Seeker')">
+            Client Mode (Post Gigs)
+          </button>
+        </div>
+      </div>
+      
+      <!-- 1. TASK MARKETPLACE VIEW -->
+      <section id="view-feed" class="view-section active">
+        <div class="feed-header">
+          <div>
+            <h1 id="feed-title">Task Marketplace</h1>
+            <p class="section-subtitle" id="feed-subtitle">Earn direct cash payouts in protected escrows while building your verified academic trust footprint.</p>
+          </div>
+          
+          <div class="search-and-action">
+            <div class="search-box-container">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+              </svg>
+              <input type="text" id="search-bar" class="search-input" placeholder="Search gigs, academic areas, or local addresses..." oninput="app.handleSearch()">
+            </div>
+            <button class="btn-primary btn-cash" onclick="app.switchView('post')">
+              <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+              </svg>
+              Create New Gig
+            </button>
+          </div>
+          
+          <div class="feed-filters-bar">
+            <!-- Omnichannel filters -->
+            <div class="tags-pills" id="tags-filter-container">
+              <button class="tag-pill active" onclick="app.filterByScope('All')">All Categories</button>
+              <button class="tag-pill" onclick="app.filterByScope('Virtual')">Virtual / Academic</button>
+              <button class="tag-pill" onclick="app.filterByScope('Physical')">Hyperlocal Physical</button>
+            </div>
+            
+            <div class="sort-selector">
+              <span>Sort:</span>
+              <select id="feed-sort" class="sort-select" onchange="app.handleSort()">
+                <option value="cash">Highest Cash Bounty</option>
+                <option value="karma">High Trust Bounty</option>
+                <option value="newest">Newest Gigs</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <!-- MICRO-TASKS LIST FEED -->
+        <div class="problems-feed-list" id="problems-feed">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+      
+      <!-- 2. DETAIL THREAD VIEW -->
+      <section id="view-detail" class="view-section">
+        <div class="back-btn-row">
+          <button class="btn-secondary" onclick="app.switchView('feed')">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"></path>
+            </svg>
+            Back to Marketplace
+          </button>
+        </div>
+        
+        <div class="problem-hero-card" id="detail-hero-card">
+          <!-- Populated dynamically via JS -->
+        </div>
+        
+        <!-- Real-Time Status timeline tracker -->
+        <div class="task-timeline-wrapper" id="detail-timeline-container" style="display: none;">
+          <h3 class="timeline-title">Real-Time Task Escrow Progression</h3>
+          <div class="status-timeline" id="status-timeline">
+            <div class="timeline-step" id="step-posted">
+              <div class="step-dot">1</div>
+              <span class="step-label">Escrow Locked</span>
+            </div>
+            <div class="timeline-step" id="step-assigned">
+              <div class="step-dot">2</div>
+              <span class="step-label">Provider Bound</span>
+            </div>
+            <div class="timeline-step" id="step-progress">
+              <div class="step-dot">3</div>
+              <span class="step-label">In-Progress</span>
+            </div>
+            <div class="timeline-step" id="step-submitted">
+              <div class="step-dot">4</div>
+              <span class="step-label">Work Submitted</span>
+            </div>
+            <div class="timeline-step" id="step-completed">
+              <div class="step-dot">5</div>
+              <span class="step-label">Bounty Released</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Geolocation GPS dynamic mock map for local gigs -->
+        <div class="map-outer-wrapper" id="detail-map-container" style="display: none;">
+          <div class="map-header">
+            <span>Hyperlocal Geolocation Tracking</span>
+            <span style="font-size: 11px; background: var(--cash-light); color: var(--cash-green); padding: 4px 8px; border-radius: 8px; font-weight: 600;" id="map-concurrency-status">Student active near coordinates</span>
+          </div>
+          <div class="map-container">
+            <div class="map-grid-overlay"></div>
+            <!-- Draw simulated road pathways -->
+            <svg class="map-path-vector">
+              <line x1="20" y1="50" x2="300" y2="50" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></line>
+              <line x1="300" y1="50" x2="300" y2="180" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></line>
+              <line x1="300" y1="180" x2="600" y2="180" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"></line>
+              <line x1="100" y1="50" x2="100" y2="200" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"></line>
+            </svg>
+            <!-- Pulse dot representing geolocation coordinates -->
+            <div class="map-node node-start" style="left: 40px; top: 50px;">A</div>
+            <div class="map-node node-end" style="left: 560px; top: 180px;">B</div>
+            <div class="map-pulsing-dot" id="gps-pulsing-dot" style="left: 40px; top: 50px;"></div>
+          </div>
+        </div>
+        
+        <!-- Dynamic Peer-to-Peer Secure Chat Container -->
+        <div class="chat-outer-wrapper" id="detail-chat-container" style="display: none; margin-top: 24px;">
+          <div class="chat-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="chat-status-pulse"></span>
+              <span style="font-weight: 700; font-size: 15px;" id="chat-participants-title">Secure Peer-to-Peer Chat</span>
+            </div>
+            <span style="font-size: 11px; background: var(--primary-light); color: var(--primary); padding: 4px 8px; border-radius: 8px; font-weight: 600;">🔒 AES-256 Encrypted</span>
+          </div>
+          <div class="chat-body" id="chat-messages-container">
+            <!-- Messages populated dynamically -->
+          </div>
+          <div class="chat-footer-input">
+            <input type="text" id="chat-message-input" placeholder="Type your secure message..." onkeydown="if(event.key === 'Enter') app.sendChatMessage()">
+            <button class="btn-primary" onclick="app.sendChatMessage()">
+              Send
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-left: 4px;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Collapsible cryptographic ledger block proof viewer -->
+        <div class="ledger-outer-wrapper" id="detail-ledger-block-container" style="display: none;">
+          <button class="ledger-collapsible-btn" id="ledger-toggle-btn" onclick="app.toggleLedgerPane()">
+            <span>Karma Trust Ledger Cryptographic Blocks</span>
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
+            </svg>
+          </button>
+          <div class="ledger-content-pane" id="ledger-content-pane">
+            <!-- Cryptographic blocks will load dynamically here -->
+          </div>
+        </div>
+        
+        <div class="solutions-section" id="detail-solutions-section" style="margin-top: 32px;">
+          <div class="solutions-header-row">
+            <span class="solutions-count" id="detail-solves-count">0 Claim Offers</span>
+          </div>
+          
+          <div class="solutions-list-container" id="detail-solutions-list">
+            <!-- Loaded dynamically via JS -->
+          </div>
+          
+          <!-- Submit submission / Claim box -->
+          <div class="propose-solution-box" id="claim-submission-box">
+            <h3 class="editor-title" id="action-editor-title">Propose Service Claim</h3>
+            <textarea class="solution-textarea" id="new-solution-textarea" placeholder="Detail your qualification, availability, and how you plan to complete this assignment or gig..."></textarea>
+            <div style="display: flex; justify-content: flex-end;" id="action-button-slot">
+              <!-- Replaced dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 3. POST A GIG / TASK FORM -->
+      <section id="view-post" class="view-section">
+        <h1>Lock Cash Bounty in Escrow</h1>
+        <p class="section-subtitle">Pledge cash and trust incentives. Bounties are locked in a secure Escrow lockbox and only disbursed upon verified service completion.</p>
+        
+        <div class="form-card">
+          <div class="form-group">
+            <label class="form-label" for="post-title">Task Title</label>
+            <span class="form-helper">Summarize the scope clearly (e.g. Wash dynamic SUV model inside campus parking lot, write custom JavaScript buffers helper).</span>
+            <input type="text" id="post-title" class="form-input" placeholder="e.g. Wash compact vehicle inside Student Lot C">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Task Type Scope</label>
+            <span class="form-helper">Select the fulfillment channel. Geolocation hyperlocal gigs require coordinate mapping.</span>
+            
+            <div class="category-selectors-grid">
+              <div class="category-radio-btn selected" id="post-scope-virtual" onclick="app.selectFormScope(this, 'Virtual')">
+                <span class="category-radio-title" style="color: var(--tag-tech);">Virtual / Digital</span>
+                <span class="category-radio-desc">Academic writing, assignment assistance, code review, translations</span>
+              </div>
+              <div class="category-radio-btn" id="post-scope-physical" onclick="app.selectFormScope(this, 'Physical')">
+                <span class="category-radio-title" style="color: var(--cash-green);">Hyperlocal Physical</span>
+                <span class="category-radio-desc">Local car wash, grocery delivery, campus packages, physical laundry</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group" id="form-geolocation-group" style="display: none;">
+            <label class="form-label" for="post-address">Fulfillment Geolocation Address</label>
+            <span class="form-helper">Enter the physical coordinates or campus address for this task.</span>
+            <input type="text" id="post-address" class="form-input" placeholder="e.g. Student Lot C, Coordinates [45.109, -73.582]">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="post-desc">Service Requirements & Context</label>
+            <span class="form-helper">Explain the exact instructions, expected materials, deliverables, and limits.</span>
+            <textarea class="form-input" id="post-desc" style="height: 180px; resize: vertical;" placeholder="Provide explicit rules:&#10;- For Physical: Bring own soap/sponge, meet near car license plate...&#10;- For Academic: Limit citation bibliography, follow prompt checklist..."></textarea>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="form-group">
+              <label class="form-label" for="post-cash">Cash Bounty (₹ INR)</label>
+              <span class="form-helper">This cash will be locked in the secure Escrow gateway. (Wallet: <span id="form-available-cash" style="color: var(--cash-green); font-weight: 600;">₹120.00</span>)</span>
+              <input type="number" id="post-cash" class="form-input" value="25" min="5" max="120" style="max-width: 160px;">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="post-karma">Karma Trust Points Bounty (KP)</label>
+              <span class="form-helper">Add a reputation incentive to attract high-grade student experts.</span>
+              <input type="number" id="post-karma" class="form-input" value="30" min="10" max="250" style="max-width: 160px;">
+            </div>
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+            <button class="btn-secondary" onclick="app.switchView('feed')">Cancel</button>
+            <button class="btn-primary btn-cash" onclick="app.submitNewProblem()">Lock Escrow & Publish</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 4. MY HUB DASHBOARD (DUAL STATE LAYOUTS) -->
+      <section id="view-hub" class="view-section">
+        <h1 id="hub-header-title">Student Dashboard</h1>
+        <p class="section-subtitle" id="hub-header-subtitle">Track your claimed tasks, pending payouts, verified trust ledgers, and reputation progression.</p>
+        
+        <!-- Stats Widgets -->
+        <div class="hub-grid-3" id="hub-stats-grid">
+          <!-- Populated dynamically via role switch in JS -->
+        </div>
+        
+        <div class="hub-section-split">
+          <!-- Active tasks lists -->
+          <div class="hub-content-box">
+            <h3 class="hub-box-title" id="hub-list-title">My Claimed Gigs</h3>
+            <div class="dashboard-list" id="hub-active-problems-list">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+          
+          <!-- Trust score progression or Client escrows -->
+          <div class="hub-content-box" id="hub-aside-box">
+            <h3 class="hub-box-title">Prestige Level</h3>
+            <div style="text-align: center; margin-bottom: 20px;">
+              <div style="width: 80px; height: 80px; background: var(--cash-light); color: var(--cash-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-weight: 700; font-size: 32px;" id="hub-avatar-initials">
+                Ag
+              </div>
+              <h4 style="font-size: 16px; font-weight: 600;" id="hub-rank-name">Elite Scholar</h4>
+              <span style="font-size: 11px; color: var(--text-muted);" id="hub-rank-tier">Level IV Trust Provider</span>
+            </div>
+            
+            <div class="prestige-progress-container">
+              <div class="prestige-label-row">
+                <span style="color: var(--text-muted);">Trust Score</span>
+                <span id="hub-karma-progress">250 / 500 KP</span>
+              </div>
+              <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="hub-progress-bar-fill" style="width: 50%;"></div>
+              </div>
+              <span style="font-size: 11px; color: var(--text-muted); line-height: 1.4; display: block; margin-top: 4px;" id="hub-progress-desc">Earn 250 more Trust Points through immutable ledgers to qualify for Grandmaster gigs.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- 5. LEADERBOARD VIEW -->
+      <section id="view-council" class="view-section">
+        <h1>High-Trust Student Solvers</h1>
+        <p class="section-subtitle">Verified high-prestige students sorted by audited Karma Trust scores. Scores are checked and validated against the immutable cryptographic ledger.</p>
+        
+        <div class="leaderboard-card">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Student</th>
+                <th>Fulfillment Focus</th>
+                <th>Audited Trust Score</th>
+                <th>Badge Tier</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-rows-container">
+              <!-- Loaded dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+      
+      <!-- 6. CREATE ACCOUNT VIEW -->
+      <section id="view-account" class="view-section">
+        <h1>Create Student or Seeker Profile</h1>
+        <p class="section-subtitle">Establish your identity on the Karma platform. Customize your role to unlock targeted payouts, coordinate escrows, and build trust footprints.</p>
+        
+        <div class="form-card">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 20px;">
+            <div class="form-group">
+              <label class="form-label" for="acc-username">Display Full Name</label>
+              <span class="form-helper">Enter your public profile name.</span>
+              <input type="text" id="acc-username" class="form-input" placeholder="e.g. Elena Rostova" value="Elena Rostova">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="acc-role">Default Platform Role</label>
+              <span class="form-helper">Choose your primary operational focus.</span>
+              <select id="acc-role" class="form-input sort-select" style="max-width: 100%; height: 46px; font-size: 14px;">
+                <option value="Student">Student Provider (Earn Cash Payouts)</option>
+                <option value="Seeker">Seeker Client (Post Tasks & Lock Escrows)</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label" for="acc-specialty">Fulfillment Focus & Specialty</label>
+            <span class="form-helper">Summarize your academic focus or service capabilities (e.g. Academic STEM Writing, Hyperlocal Deliveries).</span>
+            <input type="text" id="acc-specialty" class="form-input" placeholder="e.g. Fullstack Development & Academic Gigs" value="Fullstack Development & Academic Gigs">
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label">Profile Avatar Selection</label>
+            <span class="form-helper">Choose an unrealistic vector cartoon preset, upload your own photo, or paste a custom URL.</span>
+            
+            <div class="avatar-selection-row">
+              <!-- Cartoon presets -->
+              <div class="avatar-presets-grid">
+                <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=Elena" class="avatar-preset-item selected" onclick="app.selectAvatarPreset(this)" alt="Preset 1">
+                <img src="https://api.dicebear.com/7.x/lorelei/svg?seed=Aiden" class="avatar-preset-item" onclick="app.selectAvatarPreset(this)" alt="Preset 2">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Marcus" class="avatar-preset-item" onclick="app.selectAvatarPreset(this)" alt="Preset 3">
+                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Clara" class="avatar-preset-item" onclick="app.selectAvatarPreset(this)" alt="Preset 4">
+                <img src="https://api.dicebear.com/7.x/fun-emoji/svg?seed=Joy" class="avatar-preset-item" onclick="app.selectAvatarPreset(this)" alt="Preset 5">
+              </div>
+              
+              <!-- Divider -->
+              <div class="avatar-divider"></div>
+
+              <!-- Custom upload card -->
+              <div class="custom-upload-card" id="custom-upload-card" onclick="document.getElementById('acc-avatar-file').click()">
+                <input type="file" id="acc-avatar-file" accept="image/*" style="display: none;" onchange="app.handleAvatarFileUpload(event)">
+                <div class="upload-card-content">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="upload-icon"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span class="upload-text">Upload Photo</span>
+                </div>
+                <div class="upload-preview-container" id="upload-preview-container">
+                  <img id="custom-upload-preview" class="upload-preview-thumb" src="" alt="Upload Preview">
+                </div>
+              </div>
+            </div>
+            
+            <input type="text" id="acc-avatar-url" class="form-input" placeholder="Paste custom avatar URL..." value="https://api.dicebear.com/7.x/adventurer/svg?seed=Elena">
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 12px;">
+            <div class="form-group">
+              <label class="form-label" for="acc-cash">Initial Cash Balance (₹ INR)</label>
+              <span class="form-helper">Starting funds loaded in your cash wallet.</span>
+              <input type="number" id="acc-cash" class="form-input" value="120" min="0" max="1000" style="max-width: 180px;">
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="acc-karma">Initial Trust Score (KP)</label>
+              <span class="form-helper">Starting reputation footprints.</span>
+              <input type="number" id="acc-karma" class="form-input" value="250" min="0" max="1000" style="max-width: 180px;">
+            </div>
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+            <button class="btn-secondary" onclick="app.switchView('feed')">Cancel</button>
+            <button class="btn-primary btn-cash" onclick="app.createNewProfile()">Create Profile Account</button>
+          </div>
+        </div>
+      </section>
+      
+      <!-- GLOBAL FOOTER & DISCORD BANNER -->
+      <footer class="app-footer">
+        <div class="discord-cta-card">
+          <div class="discord-cta-left">
+            <div class="discord-logo-icon">
+              <svg viewBox="0 0 127.14 96.36" fill="currentColor" style="width: 28px; height: 28px;">
+                <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77,77,0,0,0-3.3,6.83A96.67,96.67,0,0,0,52.88,6.83,77,77,0,0,0,49.58,0,105.15,105.15,0,0,0,19.14,8.07C3.58,31.21-1.22,53.74,1,75.9A105.73,105.73,0,0,0,32,96.36a77,77,0,0,0,6.6-10.74,68.87,68.87,0,0,1-10.42-5c.87-.64,1.73-1.32,2.55-2a75.76,75.76,0,0,0,72.68,0c.83.69,1.68,1.37,2.55,2a68.87,68.87,0,0,1-10.42,5A77,77,0,0,0,102,85.62a105.73,105.73,0,0,0,31-20.46C135.27,47.85,130.12,25.56,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+              </svg>
+            </div>
+            <div class="discord-cta-text">
+              <h4>Join the Karma Peer Network</h4>
+              <p>Connect with student solvers, exchange live gig coordinates, and coordinate escrow handshakes in real-time.</p>
+            </div>
+          </div>
+          <a href="https://discord.gg/JQtGFaQt" target="_blank" rel="noopener noreferrer" class="discord-join-btn">
+            Join Discord Invite
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"></path>
+            </svg>
+          </a>
+        </div>
+        
+        <div class="footer-bottom-info">
+          <span>&copy; 2026 Karma Student Financial Empowerment Platform. All rights secured via Immutable Ledger.</span>
+          <div class="footer-links">
+            <a href="#">Privacy Protocol</a>
+            <a href="#">Escrow Terms</a>
+            <a href="#">Council Guidelines</a>
+          </div>
+        </div>
+      </footer>
+      
+    </main>
+    
+  </div>
+  
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-layer">
+    <!-- Populated dynamically to simulate real-time activity -->
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
